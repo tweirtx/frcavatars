@@ -1,21 +1,55 @@
-from flask import Flask, request, send_from_directory, redirect
+from flask import Flask, request, send_from_directory, redirect, url_for, abort
 import base64
 import os
+import asyncio
+import datetime
+import tbapi
 
+parser = tbapi.TBAParser(api_key='Lq2N2vCfpqiLUcVkRNzuxZZ2LhDhk60CbiDOuh1SeRuwzY4kbEmwcNRGcMeySA0p', cache=False)
 app = Flask(__name__)
+
+
+async def sleepcheck():
+    while True:
+        files = os.listdir(avatars)
+        for i in files:
+            filedate = datetime.datetime.fromtimestamp(os.stat(i).st_ctime)
+            today = datetime.datetime.today()
+            if filedate.hour == today.hour and filedate.day != today.day:
+                os.remove('avatars/{}'.format(i))
+        asyncio.sleep(3600)
 
 
 @app.route('/get_image')
 def get_image():
     team = request.args.get('team')
+    try:
+        int(team)
+    except:
+        return "Please specify a valid team!"
+    type = request.args.get('type')
     files = os.listdir('avatars')
     if '{}.png'.format(team) not in files:
-        img_data = b'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'
-        # Get this automatically from TBA
+        try:
+            media = parser.get_team_media(team, 2018)
+        except:
+            return abort(404)
+        img_data = None
+        for i in media:
+            if i.type == 'avatar':
+                img_data = i.details['base64Image']
+                img_data = img_data.encode()
+        if img_data is None:
+            return abort(404)
         with open("avatars/{}.png".format(team), "wb") as fh:
+            print(len(img_data))
             fh.write(base64.decodebytes(img_data))
-
-    return redirect('/avatars/{}.png'.format(team), code=302)
+    if type == 'image':
+        return send_from_directory('avatars', '{}.png'.format(team))
+    elif type == 'url':
+        return url_for('avatars/{}.png'.format(team))
+    else:
+        return redirect('/avatars/{}.png'.format(team), code=302)
 
 
 @app.route('/avatars/<path:path>')
@@ -25,7 +59,7 @@ def avatars(path):
 
 @app.route('/')
 def home():
-    return "Help page coming soon"
+    return app.send_static_file('index.html')
 
 
 app.run(port=80)
