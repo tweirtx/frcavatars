@@ -60,6 +60,3 @@ def avatars(path):
 @app.route('/')
 def home():
     return app.send_static_file('index.html')
-
-
-app.run(port=80)
