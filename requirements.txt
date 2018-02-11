@@ -1,2 +1,2 @@
 flask
-tbapi
+tbapi==1.3.1b2
