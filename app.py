@@ -33,14 +33,14 @@ def get_image():
         try:
             media = parser.get_team_media(team, 2018)
         except:
-            return abort(404)
+            return send_from_directory(directory='', filename='first.jpg')
         img_data = None
         for i in media:
             if i.type == 'avatar':
                 img_data = i.details['base64Image']
                 img_data = img_data.encode()
         if img_data is None:
-            return abort(404)
+            return send_from_directory(directory='', filename='first.jpg')
         with open("avatars/{}.png".format(team), "wb") as fh:
             print(len(img_data))
             fh.write(base64.decodebytes(img_data))
