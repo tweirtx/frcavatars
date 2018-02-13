@@ -33,14 +33,14 @@ def get_image():
         try:
             media = parser.get_team_media(team, 2018)
         except:
-            return send_from_directory(directory='', filename='first.jpg')
+            return redirect('first.jpg')
         img_data = None
         for i in media:
             if i.type == 'avatar':
                 img_data = i.details['base64Image']
                 img_data = img_data.encode()
         if img_data is None:
-            return send_from_directory(directory='', filename='first.jpg')
+            return redirect('first.jpg')
         with open("avatars/{}.png".format(team), "wb") as fh:
             print(len(img_data))
             fh.write(base64.decodebytes(img_data))
@@ -50,6 +50,11 @@ def get_image():
         return url_for('avatars/{}.png'.format(team))
     else:
         return redirect('/avatars/{}.png'.format(team), code=302)
+
+
+@app.route('/first.jpg')
+def first():
+    return send_from_directory('', 'first.jpg')
 
 
 @app.route('/avatars/<path:path>')
