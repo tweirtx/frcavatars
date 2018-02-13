@@ -40,7 +40,7 @@ def get_image():
                 img_data = i.details['base64Image']
                 img_data = img_data.encode()
         if img_data is None:
-            return redirect('first.jpg')
+            return redirect('first.png')
         with open("avatars/{}.png".format(team), "wb") as fh:
             print(len(img_data))
             fh.write(base64.decodebytes(img_data))
@@ -52,7 +52,7 @@ def get_image():
         return redirect('/avatars/{}.png'.format(team), code=302)
 
 
-@app.route('/first.jpg')
+@app.route('/first.png')
 def first():
     return send_from_directory('', 'first.png')
 
