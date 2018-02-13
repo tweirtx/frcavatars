@@ -33,7 +33,7 @@ def get_image():
         try:
             media = parser.get_team_media(team, 2018)
         except:
-            return redirect('first.jpg')
+            return redirect('first.png')
         img_data = None
         for i in media:
             if i.type == 'avatar':
@@ -54,7 +54,7 @@ def get_image():
 
 @app.route('/first.jpg')
 def first():
-    return send_from_directory('', 'first.jpg')
+    return send_from_directory('', 'first.png')
 
 
 @app.route('/avatars/<path:path>')
