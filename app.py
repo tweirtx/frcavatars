@@ -31,7 +31,7 @@ def get_image():
     files = os.listdir('avatars')
     if '{}.png'.format(team) not in files:
         try:
-            media = parser.get_team_media(team, 2018)
+            media = parser.get_team_media(team, 2019)
         except:
             return redirect('first.png')
         img_data = None
