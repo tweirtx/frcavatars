@@ -23,7 +23,7 @@ async def sleepcheck():
         asyncio.sleep(3600)
 
 
-@app.route('/get_image')
+@app.route('/avatars/get_image')
 def get_image():
     team = request.args.get('team')
     try:
@@ -44,7 +44,7 @@ def get_image():
                 img_data = i.details['base64Image']
                 img_data = img_data.encode()
         if img_data is None:
-            return redirect('first.png')
+            return redirect('/avatars/first.png')
         with open("avatars/{}.png".format(team), "wb") as fh:
             print(len(img_data))
             fh.write(base64.decodebytes(img_data))
@@ -56,7 +56,7 @@ def get_image():
         return redirect('/avatars/{}.png'.format(team), code=302)
 
 
-@app.route('/first.png')
+@app.route('/avatars/first.png')
 def first():
     return send_from_directory('', 'first.png')
 
@@ -66,6 +66,6 @@ def avatars(path):
     return send_from_directory('avatars', path)
 
 
-@app.route('/')
+@app.route('/avatars')
 def home():
     return app.send_static_file('index.html')
