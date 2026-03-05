@@ -5,6 +5,9 @@ import asyncio
 import datetime
 import tbapi
 
+from dotenv import load_dotenv
+load_dotenv()
+
 parser = tbapi.TBAParser(api_key=os.environ.get('TBAKEY'), cache=False)
 app = Flask(__name__)
 
